@@ -1,73 +1,29 @@
-# Nuxt Layer Starter
+# Custom Scrollbar
 
-Create Nuxt extendable layer with this GitHub template.
+Creates a custom scrollbar intended for use in specific cases where it is needed, eg tables where you dont want the default scrollbar.
 
-## Setup
+## Basic usage
 
-Make sure to install the dependencies:
-
-```bash
-pnpm install
+```html
+<CustomScrollbar aria-controls="__nuxt" class="h-full top-0 right-0" />
 ```
 
-## Working on your theme
+## Props overview
 
-Your theme is at the root of this repository, it is exactly like a regular Nuxt project, except you can publish it on NPM.
+#### CustomScrollbar's props overview
 
-The `.playground` directory should help you on trying your theme during development.
+| Prop            | Description                                                               | Default value | Data type       |
+| --------------- | ------------------------------------------------------------------------- | ------------- | --------------- |
+| persistent      | Enables the scrollbar always, even though the target is scrollable        | false         | Boolean         |
+| ariaControls    | Sets the first row of the table as the table header.                      | null          | String          |
+| ariaValueNow    | Sets the first column of the table as the table header.                   | 0             | [String,Number] |
+| ariaValuemin    | Sets the minimum value of the scrollbar as aria property `aria-valuemin`  | 0             | [String,Number] |
+| ariaValuemax    | Sets the maximum value of the scrollbar as aria property `aria-valuemin`  | 100           | [String,Number] |
+| ariaOrientation | Sets the orientation of the scrollbar as aria property `aria-orientation` | 'vertical'    | String          |
 
-Running `pnpm dev` will prepare and boot `.playground` directory, which imports your theme itself.
+## Available slots
 
-## Distributing your theme
-
-Your Nuxt layer is shaped exactly the same as any other Nuxt project, except you can publish it on NPM.
-
-To do so, you only have to check if `files` in `package.json` are valid, then run:
-
-```bash
-npm publish --access public
-```
-
-Once done, your users will only have to run:
-
-```bash
-npm install --save your-theme
-```
-
-Then add the dependency to their `extends` in `nuxt.config`:
-
-```ts
-defineNuxtConfig({
-  extends: 'your-theme'
-})
-```
-
-## Development Server
-
-Start the development server on http://localhost:3000
-
-```bash
-pnpm dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-pnpm build
-```
-
-Or statically generate it with:
-
-```bash
-pnpm generate
-```
-
-Locally preview production build:
-
-```bash
-pnpm preview
-```
-
-Checkout the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+| Slot name  | Description                                                                      |
+| ---------- | -------------------------------------------------------------------------------- |
+| beforeRail | Content placed before the rail, like the arrows in the default chrome scrollbar. |
+| afterRail  | Content placed after the rail, like the arrows in the default chrome scrollbar.  |

@@ -1,6 +1,6 @@
 <template>
 	<div class="test-wrapper">
-		<CustomScrollbar aria-controls="__nuxt" class="scrollbar" handleClass="rebox"/>
+		<CustomScrollbar aria-controls="__nuxt" class="scrollbar" handleClass="rebox" ><template #beforeRail>sdfsdfg</template> <template #afterRail>sdfsdfadsfasdfdssdfafsdasfddfsg</template></CustomScrollbar>
 		<div class="rebox">
 
 		</div>
@@ -25,7 +25,6 @@ body {
 	position: fixed;
 	top: 0;
 	right: 50px;
-	/* height: calc(100% - (var(--icon-height) * 2)); */
-	height: 100%;
+	height: 80%;
 }
 </style>
