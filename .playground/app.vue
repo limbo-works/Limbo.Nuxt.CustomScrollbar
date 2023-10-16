@@ -1,55 +1,26 @@
 <template>
-	<div class="test-wrapper">
-		<CustomScrollbar
-			aria-controls="__nuxt"
+	<div
+		id="__chokoladefabrikken"
+		style="width: 100vw; height: 50vh; overflow-y: auto;"
+	>
+		<!-- <CustomScrollbar
+			aria-controls="chokoladefabrikken"
 			class="scrollbarVertical"
 			handle-class="rebox"
 			aria-orientation="vertical"
-		>
-			<template #beforeRail="{ scrollBy, scrollToEnd, scrollToStart }"
-				><button @click="scrollToStart" class="btn" style="height:24px;">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="icon"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M12 19.5v-15m0 0l-6.75 6.75M12 4.5l6.75 6.75"
-						/>
-					</svg></button
-			></template>
-			<template #afterRail="{ scrollBy, scrollToEnd, scrollToStart }">
-				<button @click="scrollToEnd" class="btn" style="height:24px;">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke-width="1.5"
-						stroke="currentColor"
-						class="icon"
-					>
-						<path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
-						/>
-					</svg>
-				</button>
-			</template>
-			>
-		</CustomScrollbar>
+			:persistent="true"
+		/> -->
+		<div style="width:200vw;">
+
+		</div>
 		<CustomScrollbar
-			aria-controls="__nuxt"
+			aria-controls="__chokoladefabrikken"
 			class="scrollbarHorizontal"
 			handle-class="rebox"
 			aria-orientation="horizontal"
+			:persistent="true"
 		>
-			<template #beforeRail="{ scrollBy, scrollToEnd, scrollToStart }"
+			<!-- <template #beforeRail="{ scrollBy, scrollToEnd, scrollToStart }"
 				><button @click="scrollToStart" class="btn">
 					<svg
 						xmlns="http://www.w3.org/2000/svg"
@@ -83,8 +54,7 @@
 						/>
 					</svg>
 				</button>
-			</template>
-			>
+			</template> -->
 		</CustomScrollbar>
 	</div>
 </template>
@@ -99,8 +69,8 @@ body {
 }
 
 .icon {
-	height: 12px ;
-	width: 12px ;
+	height: 12px;
+	width: 12px;
 }
 
 .rebox {
@@ -124,7 +94,7 @@ body {
 .scrollbarHorizontal {
 	position: fixed;
 	top: 0;
-	left: 16px ;
+	left: 16px;
 	width: 95%;
 }
 .scrollbarVertical {

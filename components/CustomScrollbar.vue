@@ -38,7 +38,6 @@ const props = defineProps({
 		type: Boolean,
 		default: false,
 	},
-
 	// Aria and functionality
 	ariaControls: {
 		type: String,
@@ -184,9 +183,14 @@ function detectTargetSize() {
 	if (target.value) {
 		if (props.ariaOrientation === 'horizontal') {
 			const { scrollLeft, scrollWidth, clientWidth:width } = target.value;
-			targetData.value.scrolledAmount = scrollLeft / (scrollWidth - width);
+			if(scrollWidth !==width){
+				targetData.value.scrolledAmount = scrollLeft / (scrollWidth - width);
+			} else {
+				targetData.value.scrolledAmount = 0;
+			}
 			targetData.value.outerSize = width;
 			targetData.value.innerSize = scrollWidth;
+
 		} else {
 			const { scrollTop, scrollHeight, clientHeight:height } = target.value;
 			targetData.value.scrolledAmount = scrollTop / (scrollHeight - height);
