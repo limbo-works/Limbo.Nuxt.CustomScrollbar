@@ -14,8 +14,8 @@
 		}"
 		@mousedown="jumpToClickPoint"
 	>
-		<slot name="beforeRail"></slot>
-		<div ref="rail">
+		<slot name="beforeRail" v-bind="{scrollBy, scrollToStart ,scrollToEnd}"></slot>
+		<div ref="rail" class="c-custom-scrollbar__rail">
 			<button
 				ref="handle"
 				class="c-custom-scrollbar__handle"
@@ -25,7 +25,7 @@
 				@mousedown="startDrag"
 			></button>
 		</div>
-		<slot name="afterRail"></slot>
+		<slot name="afterRail" v-bind="{scrollBy, scrollToStart ,scrollToEnd}"></slot>
 	</div>
 </template>
 
@@ -135,16 +135,18 @@ function jumpToClickPoint(event) {
 	if (isBeingDragged.value) return;
 
 	if (target.value) {
-		if (props.ariaOrientation === 'horizontal') {
-			const { left, width } = rail.value.getBoundingClientRect();
-			const { clientX } = event;
-			target.value.scrollLeft = (clientX - left) / width * (target.value.scrollWidth - target.value.clientWidth);
-		} else {
-			const { top, height } = rail.value.getBoundingClientRect();
-			const { clientY } = event;
-			target.value.scrollTop = (clientY - top) / height * (target.value.scrollHeight - target.value.clientHeight);
+		if(event.target.closest('.c-custom-scrollbar__rail')){
+			if (props.ariaOrientation === 'horizontal') {
+				const { left, width } = rail.value.getBoundingClientRect();
+				const { clientX } = event;
+				target.value.scrollLeft = (clientX - left) / width * (target.value.scrollWidth - target.value.clientWidth);
+			} else {
+				const { top, height } = rail.value.getBoundingClientRect();
+				const { clientY } = event;
+				target.value.scrollTop = (clientY - top) / height * (target.value.scrollHeight - target.value.clientHeight);
+			}
+			nextTick(startDrag);
 		}
-		nextTick(startDrag);
 	}
 }
 
@@ -181,14 +183,12 @@ function stopDrag() {
 function detectTargetSize() {
 	if (target.value) {
 		if (props.ariaOrientation === 'horizontal') {
-			const { width } = target.value.getBoundingClientRect();
-			const { scrollLeft, scrollWidth } = target.value;
+			const { scrollLeft, scrollWidth, clientWidth:width } = target.value;
 			targetData.value.scrolledAmount = scrollLeft / (scrollWidth - width);
 			targetData.value.outerSize = width;
 			targetData.value.innerSize = scrollWidth;
 		} else {
-			const { height } = target.value.getBoundingClientRect();
-			const { scrollTop, scrollHeight } = target.value;
+			const { scrollTop, scrollHeight, clientHeight:height } = target.value;
 			targetData.value.scrolledAmount = scrollTop / (scrollHeight - height);
 			targetData.value.outerSize = height;
 			targetData.value.innerSize = scrollHeight;
@@ -242,11 +242,43 @@ function detectOwnSize() {
 		scrollbarData.value.handleSize = 1;
 	}
 }
+
+function scrollBy(value) {
+	if(target.value){
+		if(props.ariaOrientation === 'horizontal'){
+			target.value.scrollBy(value, 0);
+		} else{
+			target.value.scrollBy(0, value);
+		}
+	}
+}
+function scrollToEnd() {
+	if(target.value){
+		if(props.ariaOrientation === 'horizontal'){
+			target.value.scrollBy(targetData.value.innerSize, 0);
+		} else{
+			target.value.scrollBy(0, targetData.value.innerSize);
+		}
+	}
+}
+function scrollToStart() {
+	if(target.value){
+		if(props.ariaOrientation === 'horizontal'){
+			target.value.scrollLeft = 0;
+		} else{
+			target.value.scrollTop = 0;
+		}
+	}
+}
+
 </script>
 
 <style lang="postcss">
+
 /* Rail defaults */
 :where(.c-custom-scrollbar) {
+	display:flex;
+	flex-direction: column;
 	width: 16px;
 	height: 100%;
 	background-color: lightgray;
@@ -256,11 +288,17 @@ function detectOwnSize() {
 :where(.c-custom-scrollbar[aria-orientation="horizontal"]) {
 	width: 100%;
 	height: 16px;
+	flex-direction: row;
 }
-.c-custom-scrollbar > div {
+:where(.c-custom-scrollbar > *) {
+	flex-shrink: 0;
+	flex-grow: 0;
+}
+.c-custom-scrollbar > .c-custom-scrollbar__rail {
 	position: relative;
 	width: 100%;
 	height: 100%;
+	flex-shrink: 1;
 }
 
 /* Handle defaults */
@@ -279,5 +317,6 @@ function detectOwnSize() {
 	width: var(--scrollbar-handle-size, 50%);
 	min-height: 0;
 	height: 100%;
+	transform: translateX(var(--scrollbar-handle-position, 0%));
 }
 </style>
