@@ -1,7 +1,7 @@
 {
 	"name": "@limbo-works/custom-scrollbar",
 	"type": "module",
-	"version": "0.0.1",
+	"version": "0.0.2",
 	"main": "./nuxt.config.js",
 	"scripts": {
 		"dev": "nuxi dev .playground",
@@ -15,6 +15,6 @@
 	},
 	"devDependencies": {
 		"nuxt": "^3.6.2",
-		"@limbo-works/lint-configs": "^1.0.1"
+		"@limbo-works/lint-configs": "^1.0.2"
 	}
 }
