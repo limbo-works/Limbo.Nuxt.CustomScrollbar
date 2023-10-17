@@ -141,8 +141,19 @@ watch(
 	{ immediate: true }
 );
 
-onMounted(()=>{
-	nextTick(initialize);
+const mountInitialization = (count = 0) => {
+	// Already initialized
+	if (target.value) return;
+
+	// Try initialize the component 5 times before giving up
+	if (props.ariaControls && document.getElementById(props.ariaControls)) {
+		initialize();
+	} else if (count < 5) {
+		setTimeout(() => mountInitialization(count + 1), 50);
+	}
+};
+onMounted(() => {
+	mountInitialization();
 });
 onUnmounted(() => (target.value = null));
 
