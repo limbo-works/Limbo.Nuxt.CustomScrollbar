@@ -1,6 +1,6 @@
 <template>
 	<div
-		v-if="targetData.canScroll || persistent"
+		v-if="isVisible"
 		role="scrollbar"
 		:aria-controls="ariaControls"
 		:aria-valuenow="ariaValuenow"
@@ -84,6 +84,16 @@ const targetData = ref({
 	scrolledAmount: 0,
 	outerSize: 0,
 	innerSize: 0,
+});
+
+const isVisible = computed(()=> {
+	return targetData.value.canScroll || props.persistent;
+});
+
+defineExpose(()=>{
+	return {
+		isVisible,
+	};
 });
 
 watch(targetData, () => {
