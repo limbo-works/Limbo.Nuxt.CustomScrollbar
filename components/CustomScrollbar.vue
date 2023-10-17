@@ -9,12 +9,17 @@
 		:aria-orientation="ariaOrientation"
 		class="c-custom-scrollbar"
 		:style="{
-			'--scrollbar-handle-position': `${scrollbarData.handlePosition * 100}%`,
+			'--scrollbar-handle-position': `${
+				scrollbarData.handlePosition * 100
+			}%`,
 			'--scrollbar-handle-size': `${scrollbarData.handleSize * 100}%`,
 		}"
 		@mousedown="jumpToClickPoint"
 	>
-		<slot name="beforeRail" v-bind="{scrollBy, scrollToStart ,scrollToEnd}"></slot>
+		<slot
+			name="beforeRail"
+			v-bind="{ scrollBy, scrollToStart, scrollToEnd }"
+		></slot>
 		<div ref="rail" class="c-custom-scrollbar__rail">
 			<button
 				ref="handle"
@@ -25,7 +30,10 @@
 				@mousedown="startDrag"
 			></button>
 		</div>
-		<slot name="afterRail" v-bind="{scrollBy, scrollToStart ,scrollToEnd}"></slot>
+		<slot
+			name="afterRail"
+			v-bind="{ scrollBy, scrollToStart, scrollToEnd }"
+		></slot>
 	</div>
 </template>
 
@@ -44,15 +52,15 @@ const props = defineProps({
 		required: true,
 	},
 	ariaValuenow: {
-		type: [String,Number],
+		type: [String, Number],
 		default: 0,
 	},
 	ariaValuemin: {
-		type: [String,Number],
+		type: [String, Number],
 		default: 0,
 	},
 	ariaValuemax: {
-		type: [String,Number],
+		type: [String, Number],
 		default: 100,
 	},
 	ariaOrientation: {
@@ -86,51 +94,61 @@ const targetData = ref({
 	innerSize: 0,
 });
 
-const isVisible = computed(()=> {
+const isVisible = computed(() => {
 	return targetData.value.canScroll || props.persistent;
 });
 
-defineExpose(()=>{
-	return {
-		isVisible,
-	};
+defineExpose({
+	isVisible,
 });
 
 watch(targetData, () => {
 	detectOwnSize();
 });
-watch(() => targetData.value.canScroll, (canScroll) => {
-	if (canScroll) {
-		initialize();
+watch(
+	() => targetData.value.canScroll,
+	(canScroll) => {
+		if (canScroll) {
+			initialize();
+		}
 	}
-});
+);
 
 // Make ariaValuenow v-model compatible
 const ariaValuenow = ref(props.ariaValuenow);
-watch(() => props.ariaValuenow, (value) => ariaValuenow.value = +value);
+watch(
+	() => props.ariaValuenow,
+	(value) => (ariaValuenow.value = +value)
+);
 watch(ariaValuenow, (value) => emit('update:ariaValuenow', value));
 
 // Track target element
 const target = ref(null);
-watch(target, (target, oldTarget) => {
-	if (oldTarget) {
-		targetObserver.value.unobserve(oldTarget);
-		oldTarget.removeEventListener('scroll', handleScrollFromTarget);
-	}
-	if (target) {
-		targetObserver.value.observe(target);
-		target.addEventListener('scroll', handleScrollFromTarget);
-	}
-	// Run the handling function once to set initial values
-	handleScrollFromTarget();
-}, { immediate: true });
+watch(
+	target,
+	(target, oldTarget) => {
+		if (oldTarget) {
+			targetObserver.value.unobserve(oldTarget);
+			oldTarget.removeEventListener('scroll', handleScrollFromTarget);
+		}
+		if (target) {
+			targetObserver.value.observe(target);
+			target.addEventListener('scroll', handleScrollFromTarget);
+		}
+		// Run the handling function once to set initial values
+		handleScrollFromTarget();
+	},
+	{ immediate: true }
+);
 
 onMounted(initialize);
-onUnmounted(() => target.value = null);
+onUnmounted(() => (target.value = null));
 
 function initialize() {
-	scrollbarObserver.value = scrollbarObserver.value || new ResizeObserver(detectOwnSize);
-	targetObserver.value = targetObserver.value || new ResizeObserver(handleScrollFromTarget);
+	scrollbarObserver.value =
+		scrollbarObserver.value || new ResizeObserver(detectOwnSize);
+	targetObserver.value =
+		targetObserver.value || new ResizeObserver(handleScrollFromTarget);
 	target.value = document.getElementById(props.ariaControls);
 
 	detectTargetSize();
@@ -144,15 +162,19 @@ function jumpToClickPoint(event) {
 	if (isBeingDragged.value) return;
 
 	if (target.value) {
-		if(event.target.closest('.c-custom-scrollbar__rail')){
+		if (event.target.closest('.c-custom-scrollbar__rail')) {
 			if (props.ariaOrientation === 'horizontal') {
 				const { left, width } = rail.value.getBoundingClientRect();
 				const { clientX } = event;
-				target.value.scrollLeft = (clientX - left) / width * (target.value.scrollWidth - target.value.clientWidth);
+				target.value.scrollLeft =
+					((clientX - left) / width) *
+					(target.value.scrollWidth - target.value.clientWidth);
 			} else {
 				const { top, height } = rail.value.getBoundingClientRect();
 				const { clientY } = event;
-				target.value.scrollTop = (clientY - top) / height * (target.value.scrollHeight - target.value.clientHeight);
+				target.value.scrollTop =
+					((clientY - top) / height) *
+					(target.value.scrollHeight - target.value.clientHeight);
 			}
 			nextTick(startDrag);
 		}
@@ -174,12 +196,14 @@ function handleDrag(event) {
 			const { movementX } = event;
 			const { width } = rail.value.getBoundingClientRect();
 			const { scrollLeft, scrollWidth } = target.value;
-			target.value.scrollLeft = scrollLeft + movementX / width * scrollWidth;
+			target.value.scrollLeft =
+				scrollLeft + (movementX / width) * scrollWidth;
 		} else {
 			const { movementY } = event;
 			const { height } = rail.value.getBoundingClientRect();
 			const { scrollTop, scrollHeight } = target.value;
-			target.value.scrollTop = scrollTop + movementY / height * scrollHeight;
+			target.value.scrollTop =
+				scrollTop + (movementY / height) * scrollHeight;
 		}
 	}
 }
@@ -192,18 +216,27 @@ function stopDrag() {
 function detectTargetSize() {
 	if (target.value) {
 		if (props.ariaOrientation === 'horizontal') {
-			const { scrollLeft, scrollWidth, clientWidth:width } = target.value;
-			if(scrollWidth !==width){
-				targetData.value.scrolledAmount = scrollLeft / (scrollWidth - width);
+			const {
+				scrollLeft,
+				scrollWidth,
+				clientWidth: width,
+			} = target.value;
+			if (scrollWidth !== width) {
+				targetData.value.scrolledAmount =
+					scrollLeft / (scrollWidth - width);
 			} else {
 				targetData.value.scrolledAmount = 0;
 			}
 			targetData.value.outerSize = width;
 			targetData.value.innerSize = scrollWidth;
-
 		} else {
-			const { scrollTop, scrollHeight, clientHeight:height } = target.value;
-			targetData.value.scrolledAmount = scrollTop / (scrollHeight - height);
+			const {
+				scrollTop,
+				scrollHeight,
+				clientHeight: height,
+			} = target.value;
+			targetData.value.scrolledAmount =
+				scrollTop / (scrollHeight - height);
 			targetData.value.outerSize = height;
 			targetData.value.innerSize = scrollHeight;
 		}
@@ -219,35 +252,59 @@ function detectOwnSize() {
 	if (rail.value && targetData.value?.outerSize) {
 		if (props.ariaOrientation === 'horizontal') {
 			const { width } = rail.value.getBoundingClientRect();
-			let pixelSize = targetData.value.outerSize / targetData.value.innerSize * width;
+			let pixelSize =
+				(targetData.value.outerSize / targetData.value.innerSize) *
+				width;
 			scrollbarData.value.railLength = width;
 			scrollbarData.value.handleSize = pixelSize / width;
 
-			scrollbarData.value.handlePosition = targetData.value.scrolledAmount * (width - pixelSize) / pixelSize;
-			ariaValuenow.value = +props.ariaValuemin + targetData.value.scrolledAmount * (+props.ariaValuemax - props.ariaValuemin);
+			scrollbarData.value.handlePosition =
+				(targetData.value.scrolledAmount * (width - pixelSize)) /
+				pixelSize;
+			ariaValuenow.value =
+				+props.ariaValuemin +
+				targetData.value.scrolledAmount *
+					(+props.ariaValuemax - props.ariaValuemin);
 
 			nextTick(() => {
 				pixelSize = handle.value.clientWidth;
 				scrollbarData.value.handleSize = pixelSize / width;
 
-				scrollbarData.value.handlePosition = targetData.value.scrolledAmount * (width - pixelSize) / pixelSize;
-				ariaValuenow.value = +props.ariaValuemin + targetData.value.scrolledAmount * (+props.ariaValuemax - props.ariaValuemin);
+				scrollbarData.value.handlePosition =
+					(targetData.value.scrolledAmount * (width - pixelSize)) /
+					pixelSize;
+				ariaValuenow.value =
+					+props.ariaValuemin +
+					targetData.value.scrolledAmount *
+						(+props.ariaValuemax - props.ariaValuemin);
 			});
 		} else {
 			const { height } = rail.value.getBoundingClientRect();
-			let pixelSize = targetData.value.outerSize / targetData.value.innerSize * height;
+			let pixelSize =
+				(targetData.value.outerSize / targetData.value.innerSize) *
+				height;
 			scrollbarData.value.railLength = height;
 			scrollbarData.value.handleSize = pixelSize / height;
 
-			scrollbarData.value.handlePosition = targetData.value.scrolledAmount * (height - pixelSize) / pixelSize;
-			ariaValuenow.value = +props.ariaValuemin + targetData.value.scrolledAmount * (+props.ariaValuemax - props.ariaValuemin);
+			scrollbarData.value.handlePosition =
+				(targetData.value.scrolledAmount * (height - pixelSize)) /
+				pixelSize;
+			ariaValuenow.value =
+				+props.ariaValuemin +
+				targetData.value.scrolledAmount *
+					(+props.ariaValuemax - props.ariaValuemin);
 
 			nextTick(() => {
 				pixelSize = handle.value.clientHeight;
 				scrollbarData.value.handleSize = pixelSize / height;
 
-				scrollbarData.value.handlePosition = targetData.value.scrolledAmount * (height - pixelSize) / pixelSize;
-				ariaValuenow.value = +props.ariaValuemin + targetData.value.scrolledAmount * (+props.ariaValuemax - props.ariaValuemin);
+				scrollbarData.value.handlePosition =
+					(targetData.value.scrolledAmount * (height - pixelSize)) /
+					pixelSize;
+				ariaValuenow.value =
+					+props.ariaValuemin +
+					targetData.value.scrolledAmount *
+						(+props.ariaValuemax - props.ariaValuemin);
 			});
 		}
 	} else {
@@ -258,40 +315,38 @@ function detectOwnSize() {
 }
 
 function scrollBy(value) {
-	if(target.value){
-		if(props.ariaOrientation === 'horizontal'){
+	if (target.value) {
+		if (props.ariaOrientation === 'horizontal') {
 			target.value.scrollBy(value, 0);
-		} else{
+		} else {
 			target.value.scrollBy(0, value);
 		}
 	}
 }
 function scrollToEnd() {
-	if(target.value){
-		if(props.ariaOrientation === 'horizontal'){
+	if (target.value) {
+		if (props.ariaOrientation === 'horizontal') {
 			target.value.scrollBy(targetData.value.innerSize, 0);
-		} else{
+		} else {
 			target.value.scrollBy(0, targetData.value.innerSize);
 		}
 	}
 }
 function scrollToStart() {
-	if(target.value){
-		if(props.ariaOrientation === 'horizontal'){
+	if (target.value) {
+		if (props.ariaOrientation === 'horizontal') {
 			target.value.scrollLeft = 0;
-		} else{
+		} else {
 			target.value.scrollTop = 0;
 		}
 	}
 }
-
 </script>
 
 <style lang="postcss">
-
 /* Rail defaults */
 :where(.c-custom-scrollbar) {
-	display:flex;
+	display: flex;
 	flex-direction: column;
 	width: 16px;
 	height: 100%;
@@ -299,7 +354,7 @@ function scrollToStart() {
 	overflow: clip;
 	user-select: none;
 }
-:where(.c-custom-scrollbar[aria-orientation="horizontal"]) {
+:where(.c-custom-scrollbar[aria-orientation='horizontal']) {
 	width: 100%;
 	height: 16px;
 	flex-direction: row;
@@ -326,7 +381,10 @@ function scrollToStart() {
 	background-color: gray;
 	transform: translateY(var(--scrollbar-handle-position, 0%));
 }
-:where(.c-custom-scrollbar[aria-orientation="horizontal"] .c-custom-scrollbar__handle) {
+:where(
+		.c-custom-scrollbar[aria-orientation='horizontal']
+			.c-custom-scrollbar__handle
+	) {
 	min-width: 16px;
 	width: var(--scrollbar-handle-size, 50%);
 	min-height: 0;
