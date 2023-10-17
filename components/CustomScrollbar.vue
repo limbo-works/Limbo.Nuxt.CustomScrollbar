@@ -49,7 +49,7 @@ const props = defineProps({
 	// Aria and functionality
 	ariaControls: {
 		type: String,
-		required: true,
+		default: undefined,
 	},
 	ariaValuenow: {
 		type: [String, Number],
@@ -95,7 +95,7 @@ const targetData = ref({
 });
 
 const isVisible = computed(() => {
-	return targetData.value.canScroll || props.persistent;
+	return (props.ariaControls && targetData.value.canScroll) || props.persistent;
 });
 
 defineExpose({
