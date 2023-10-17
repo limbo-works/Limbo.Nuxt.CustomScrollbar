@@ -141,7 +141,9 @@ watch(
 	{ immediate: true }
 );
 
-onMounted(initialize);
+onMounted(()=>{
+	nextTick(initialize);
+});
 onUnmounted(() => (target.value = null));
 
 function initialize() {
