@@ -95,7 +95,9 @@ const targetData = ref({
 });
 
 const isVisible = computed(() => {
-	return (props.ariaControls && targetData.value.canScroll) || props.persistent;
+	return (
+		(props.ariaControls && targetData.value.canScroll) || props.persistent
+	);
 });
 
 defineExpose({
