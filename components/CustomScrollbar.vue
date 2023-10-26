@@ -18,7 +18,7 @@
 	>
 		<slot
 			name="beforeRail"
-			v-bind="{ scrollBy, scrollToStart, scrollToEnd }"
+			v-bind="{ refresh, scrollBy, scrollToStart, scrollToEnd }"
 		></slot>
 		<div ref="rail" class="c-custom-scrollbar__rail">
 			<button
@@ -32,7 +32,7 @@
 		</div>
 		<slot
 			name="afterRail"
-			v-bind="{ scrollBy, scrollToStart, scrollToEnd }"
+			v-bind="{ refresh, scrollBy, scrollToStart, scrollToEnd }"
 		></slot>
 	</div>
 </template>
@@ -98,10 +98,6 @@ const isVisible = computed(() => {
 	return (
 		(props.ariaControls && targetData.value.canScroll) || props.persistent
 	);
-});
-
-defineExpose({
-	isVisible,
 });
 
 watch(targetData, () => {
@@ -356,6 +352,19 @@ function scrollToStart() {
 		}
 	}
 }
+
+function refresh() {
+	initialize();
+}
+
+// Give access on ref
+defineExpose({
+	isVisible,
+	refresh,
+	scrollBy,
+	scrollToStart,
+	scrollToEnd,
+});
 </script>
 
 <style lang="postcss">

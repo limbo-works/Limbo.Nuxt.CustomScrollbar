@@ -14,6 +14,7 @@
 
 		</div>
 		<CustomScrollbar
+			ref="scrollbar"
 			aria-controls="__chokoladefabrikken"
 			class="scrollbarHorizontal"
 			handle-class="rebox"
@@ -58,6 +59,15 @@
 		</CustomScrollbar>
 	</div>
 </template>
+
+<script setup>
+const scrollbar = ref(null);
+
+onMounted(() => {
+	console.log(scrollbar.value);
+
+})
+</script>
 
 <style>
 body {
