@@ -278,16 +278,18 @@ function detectOwnSize() {
 					(+props.ariaValuemax - props.ariaValuemin);
 
 			nextTick(() => {
-				pixelSize = handle.value.clientWidth;
-				scrollbarData.value.handleSize = pixelSize / width;
+				if (handle.value) {
+					pixelSize = handle.value.clientWidth;
+					scrollbarData.value.handleSize = pixelSize / width;
 
-				scrollbarData.value.handlePosition =
-					(targetData.value.scrolledAmount * (width - pixelSize)) /
-					pixelSize;
-				ariaValuenow.value =
-					+props.ariaValuemin +
-					targetData.value.scrolledAmount *
-						(+props.ariaValuemax - props.ariaValuemin);
+					scrollbarData.value.handlePosition =
+						(targetData.value.scrolledAmount * (width - pixelSize)) /
+						pixelSize;
+					ariaValuenow.value =
+						+props.ariaValuemin +
+						targetData.value.scrolledAmount *
+							(+props.ariaValuemax - props.ariaValuemin);
+				}
 			});
 		} else {
 			const { height } = rail.value.getBoundingClientRect();
@@ -306,16 +308,18 @@ function detectOwnSize() {
 					(+props.ariaValuemax - props.ariaValuemin);
 
 			nextTick(() => {
-				pixelSize = handle.value.clientHeight;
-				scrollbarData.value.handleSize = pixelSize / height;
+				if (handle.value) {
+					pixelSize = handle.value.clientHeight;
+					scrollbarData.value.handleSize = pixelSize / height;
 
-				scrollbarData.value.handlePosition =
-					(targetData.value.scrolledAmount * (height - pixelSize)) /
-					pixelSize;
-				ariaValuenow.value =
-					+props.ariaValuemin +
-					targetData.value.scrolledAmount *
-						(+props.ariaValuemax - props.ariaValuemin);
+					scrollbarData.value.handlePosition =
+						(targetData.value.scrolledAmount * (height - pixelSize)) /
+						pixelSize;
+					ariaValuenow.value =
+						+props.ariaValuemin +
+						targetData.value.scrolledAmount *
+							(+props.ariaValuemax - props.ariaValuemin);
+				}
 			});
 		}
 	} else {
