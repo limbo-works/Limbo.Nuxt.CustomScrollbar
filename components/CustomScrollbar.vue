@@ -26,6 +26,7 @@
 				class="c-custom-scrollbar__handle"
 				:class="handleClass"
 				:style="handleStyle"
+                :aria-label="handleAriaLabel"
 				tabindex="-1"
 				@mousedown="startDrag"
 			></button>
@@ -68,6 +69,10 @@ const props = defineProps({
 		default: 'vertical',
 		validator: (value) => ['vertical', 'horizontal'].includes(value),
 	},
+    handleAriaLabel: {
+        type: String,
+        default: 'Scrollbar handle',
+    },
 
 	// Styling
 	handleClass: [Object, Array, String],
