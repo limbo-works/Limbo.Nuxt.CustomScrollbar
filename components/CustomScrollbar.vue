@@ -21,15 +21,13 @@
 			v-bind="{ refresh, scrollBy, scrollToStart, scrollToEnd }"
 		></slot>
 		<div ref="rail" class="c-custom-scrollbar__rail">
-			<button
+			<div
 				ref="handle"
 				class="c-custom-scrollbar__handle"
 				:class="handleClass"
 				:style="handleStyle"
-                :aria-label="handleAriaLabel"
-				tabindex="-1"
 				@mousedown="startDrag"
-			></button>
+			></div>
 		</div>
 		<slot
 			name="afterRail"
@@ -69,10 +67,6 @@ const props = defineProps({
 		default: 'vertical',
 		validator: (value) => ['vertical', 'horizontal'].includes(value),
 	},
-    handleAriaLabel: {
-        type: String,
-        default: 'Scrollbar handle',
-    },
 
 	// Styling
 	handleClass: [Object, Array, String],
@@ -288,7 +282,8 @@ function detectOwnSize() {
 					scrollbarData.value.handleSize = pixelSize / width;
 
 					scrollbarData.value.handlePosition =
-						(targetData.value.scrolledAmount * (width - pixelSize)) /
+						(targetData.value.scrolledAmount *
+							(width - pixelSize)) /
 						pixelSize;
 					ariaValuenow.value =
 						+props.ariaValuemin +
@@ -318,7 +313,8 @@ function detectOwnSize() {
 					scrollbarData.value.handleSize = pixelSize / height;
 
 					scrollbarData.value.handlePosition =
-						(targetData.value.scrolledAmount * (height - pixelSize)) /
+						(targetData.value.scrolledAmount *
+							(height - pixelSize)) /
 						pixelSize;
 					ariaValuenow.value =
 						+props.ariaValuemin +
