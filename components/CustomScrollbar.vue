@@ -67,6 +67,10 @@ const props = defineProps({
 		default: 'vertical',
 		validator: (value) => ['vertical', 'horizontal'].includes(value),
 	},
+	detectionBuffer: {
+		type: Number,
+		default: 0,
+	},
 
 	// Styling
 	handleClass: [Object, Array, String],
@@ -86,7 +90,7 @@ const scrollbarData = ref({
 });
 const targetData = ref({
 	get canScroll() {
-		return this.innerSize > this.outerSize;
+		return this.innerSize > this.outerSize + props.detectionBuffer;
 	},
 	scrolledAmount: 0,
 	outerSize: 0,

@@ -1,7 +1,7 @@
 <template>
 	<div
 		id="__chokoladefabrikken"
-		style="width: 100vw; height: 50vh; overflow-y: auto;"
+		style="width: 100vw; height: 50vh; overflow-y: auto"
 	>
 		<!-- <CustomScrollbar
 			aria-controls="chokoladefabrikken"
@@ -10,16 +10,14 @@
 			aria-orientation="vertical"
 			:persistent="true"
 		/> -->
-		<div style="width:200vw;">
-
-		</div>
+		<div style="width: 120vw"></div>
 		<CustomScrollbar
 			ref="scrollbar"
 			aria-controls="__chokoladefabrikken"
 			class="scrollbarHorizontal"
 			handle-class="rebox"
 			aria-orientation="horizontal"
-			:persistent="true"
+			:detection-buffer="20"
 		>
 			<!-- <template #beforeRail="{ scrollBy, scrollToEnd, scrollToStart }"
 				><button @click="scrollToStart" class="btn">
@@ -65,8 +63,7 @@ const scrollbar = ref(null);
 
 onMounted(() => {
 	console.log(scrollbar.value);
-
-})
+});
 </script>
 
 <style>
