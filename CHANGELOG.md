@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/compare/v1.0.1...v1.1.0) (2024-09-27)
+
+
+### Features
+
+* added detection buffer ([9f1f285](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/commit/9f1f2856cecca0c7f0f2afbc015e826dc122bb00))
+
 ## [1.0.1](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/compare/v1.0.0...v1.0.1) (2024-07-08)
 
 ### Bug Fixes
