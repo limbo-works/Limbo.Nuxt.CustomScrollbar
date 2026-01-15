@@ -80,6 +80,7 @@ const props = defineProps({
 const scrollbarObserver = ref(null);
 const targetObserver = ref(null);
 const isBeingDragged = ref(false);
+const mountTimeoutId = ref(null);
 
 const rail = ref(null);
 const handle = ref(null);
@@ -150,13 +151,45 @@ const mountInitialization = (count = 0) => {
 	if (props.ariaControls && document.getElementById(props.ariaControls)) {
 		initialize();
 	} else if (count < 5) {
-		setTimeout(() => mountInitialization(count + 1), 50);
+		mountTimeoutId.value = setTimeout(() => mountInitialization(count + 1), 50);
 	}
 };
 onMounted(() => {
 	mountInitialization();
 });
-onUnmounted(() => (target.value = null));
+onUnmounted(() => {
+	// Clear any pending initialization timeout
+	if (mountTimeoutId.value) {
+		clearTimeout(mountTimeoutId.value);
+		mountTimeoutId.value = null;
+	}
+
+	// Remove drag event listeners if component unmounts during drag
+	if (isBeingDragged.value) {
+		window.removeEventListener('mousemove', handleDrag);
+		window.removeEventListener('mouseup', stopDrag);
+		isBeingDragged.value = false;
+	}
+
+	// Disconnect observers
+	if (scrollbarObserver.value) {
+		scrollbarObserver.value.disconnect();
+		scrollbarObserver.value = null;
+	}
+	if (targetObserver.value) {
+		if (target.value) {
+			targetObserver.value.unobserve(target.value);
+		}
+		targetObserver.value.disconnect();
+		targetObserver.value = null;
+	}
+
+	// Remove target event listener and clear reference
+	if (target.value) {
+		target.value.removeEventListener('scroll', handleScrollFromTarget);
+		target.value = null;
+	}
+});
 
 function initialize() {
 	scrollbarObserver.value =
@@ -164,6 +197,11 @@ function initialize() {
 	targetObserver.value =
 		targetObserver.value || new ResizeObserver(handleScrollFromTarget);
 	target.value = document.getElementById(props.ariaControls);
+
+	// Observe the scrollbar rail for size changes
+	if (rail.value && scrollbarObserver.value) {
+		scrollbarObserver.value.observe(rail.value);
+	}
 
 	detectTargetSize();
 }
