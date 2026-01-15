@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/compare/v1.1.0...v1.1.1) (2026-01-15)
+
+
+### Bug Fixes
+
+* added cleanup to avoid memory leaks ([bdc3b7a](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/commit/bdc3b7a24ea3fd1953611b378a8cb7eb362171e0))
+
 ## [1.1.0](https://github.com/limbo-works/Limbo.Nuxt.CustomScrollbar/compare/v1.0.1...v1.1.0) (2024-09-27)
 
 
