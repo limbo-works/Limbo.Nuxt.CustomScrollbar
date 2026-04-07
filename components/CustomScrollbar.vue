@@ -151,7 +151,10 @@ const mountInitialization = (count = 0) => {
 	if (props.ariaControls && document.getElementById(props.ariaControls)) {
 		initialize();
 	} else if (count < 5) {
-		mountTimeoutId.value = setTimeout(() => mountInitialization(count + 1), 50);
+		mountTimeoutId.value = setTimeout(
+			() => mountInitialization(count + 1),
+			50
+		);
 	}
 };
 onMounted(() => {
@@ -453,9 +456,9 @@ defineExpose({
 	transform: translateY(var(--scrollbar-handle-position, 0%));
 }
 :where(
-		.c-custom-scrollbar[aria-orientation='horizontal']
-			.c-custom-scrollbar__handle
-	) {
+	.c-custom-scrollbar[aria-orientation='horizontal']
+		.c-custom-scrollbar__handle
+) {
 	min-width: 16px;
 	width: var(--scrollbar-handle-size, 50%);
 	min-height: 0;
